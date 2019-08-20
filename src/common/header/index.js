@@ -2,6 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {CSSTransition} from 'react-transition-group';
 import './index.css';
+import {actionCreators} from './store';
+
 import homeImage from '../../resources/img/header-home.png';
 
 const Header = (props) => {
@@ -36,6 +38,23 @@ const Header = (props) => {
                             />
                         </CSSTransition>
                         <i className={props.inputBlur ? 'icon icon-search' : 'icon icon-search icon-active'}></i>
+                        <div className={props.inputBlur ? 'display-hide header_center-left-hot-search' : 'display-show header_center-left-hot-search'}>
+                            <div className="header_center-left-hot-search-title">
+                                <span>热门搜索</span>
+                                <span>
+                                    <i className="icon-change"></i>
+                                    <span>换一批</span>
+                                </span>
+                            </div>
+                            <div className="header_center-left-hot-search-content">
+                                <span>考研</span>
+                                <span>慢死人</span>
+                                <span>巍峨</span>
+                                <span>别人</span>
+                                <span>白人</span>
+                                <span>俄文</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -62,17 +81,16 @@ const Header = (props) => {
 
 const mapStateToProps = (state) => {
     return {
-        inputBlur: state.header.inputBlur
+        // 这里state.header 也是有陈旧状态的问题，所以使用redux-immutable
+        // inputBlur: state.header.get('inputBlur')
+        inputBlur: state.get('header').get('inputBlur')
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
         searchFocusOrBlur(){
-            const action = {
-                type: 'search_focus_or_blur'
-            }
-            dispatch(action);
+            dispatch(actionCreators.searchFocusOrBlur());
         }
     }
 }

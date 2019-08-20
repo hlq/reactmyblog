@@ -20,4 +20,13 @@
     background: url('./resources/img/icon-search.png') no-repeat center;
     background-size: 100%;
 }
+.display-hide {
+    display: none;
+}
+.display-show {
+    display: block;
+}
+
+
+
 

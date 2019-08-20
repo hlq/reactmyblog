@@ -1,14 +1,15 @@
-const defaultState = {
+import * as actionTypes from './actionTypes'
+
+import {fromJS} from 'immutable';
+
+const defaultState = fromJS({
     inputBlur: true
-};
+});
 
 export default (state = defaultState, action) => {
-    const newState = JSON.parse(JSON.stringify(state));
-
-    if (action.type === 'search_focus_or_blur'){
-        newState.inputBlur = !newState.inputBlur;
-        return newState;
+    if (action.type === actionTypes.SEARCH_FOCUS_OR_BLUR){
+        return state.set('inputBlur', !state.get('inputBlur'));
     }
-
+    
     return state;
 }
