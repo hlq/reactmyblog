@@ -27,30 +27,39 @@ class Header extends Component{
                         </div>
                         <div className="nav-item header_center-left-search">
                             <CSSTransition
-                                in={this.props.inputBlur}
+                                in={this.props.inputFocus}
                                 timeout={200}
                                 classNames="slide"
                             >
                                 <input
-                                    className={this.props.inputBlur ? 'input-nor-active' : 'input-active'}
+                                    className={this.props.inputFocus ? 'input-active' : 'input-nor-active'}
                                     placeholder="搜索"
-                                    onFocus={this.props.searchFocusOrBlur}
-                                    onBlur={this.props.searchFocusOrBlur}
+                                    onFocus={() => this.props.searchFocus(this.props.list)}
+                                    onBlur={this.props.searchBlur}
                                 />
                             </CSSTransition>
-                            <i className={this.props.inputBlur ? 'icon icon-search' : 'icon icon-search icon-active'}></i>
-                            <div className={this.props.inputBlur ? 'display-hide header_center-left-hot-search' : 'display-show header_center-left-hot-search'}>
+                            <i className={this.props.inputFocus ? 'icon icon-search icon-active' : 'icon icon-search'}></i>
+                            <div className={this.props.inputFocus || this.props.mouseInHot ? 'display-show header_center-left-hot-search' : 'display-hide header_center-left-hot-search'}
+                                 onMouseEnter={this.props.onMouseEnterHot}
+                                 onMouseLeave={this.props.onMouseLeaveHot}
+                            >
                                 <div className="header_center-left-hot-search-title">
                                     <span>热门搜索</span>
-                                    <span>
-                                    <i className="icon-change"></i>
-                                    <span>换一批</span>
+                                    <span onClick={() => {
+                                        this.props.changePage(this.props.page, this.props.totalPage, this.spinIcon)
+                                    }}>
+                                        <i className="icon-change" ref={(icon) => this.spinIcon = icon} ></i>
+                                    <span className="span-change">换一批</span>
                                 </span>
                                 </div>
                                 <div className="header_center-left-hot-search-content">
                                     {
-                                        this.props.list.map((item) => {
-                                            return <sapn key={item}>{item}</sapn>
+                                        this.props.list.map((item, index) => {
+                                            if (index >= (this.props.page - 1) * 10 && index < this.props.page * 10 ){
+                                                return <span key={item}>{item}</span>    
+                                            } else {
+                                                return '';
+                                            }
                                         })
                                     }
                                 </div>
@@ -85,17 +94,46 @@ const mapStateToProps = (state) => {
     return {
         // 这里state.header 也是有陈旧状态的问题，所以使用redux-immutable
         // inputBlur: state.header.get('inputBlur')
-        inputBlur: state.get('header').get('inputBlur'),
-        list:state.get('header').get('list')
+        inputFocus: state.get('header').get('inputFocus'),
+        mouseInHot:state.get('header').get('mouseInHot'),
+        list:state.get('header').get('list'),
+        page: state.get('header').get('page'),
+        totalPage:state.get('header').get('totalPage'),
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        searchFocusOrBlur(){
-            dispatch(actionCreators.getList());
-            dispatch(actionCreators.searchFocusOrBlur());
-        }
+        searchFocus(list){
+            if (list.size === 0){
+                dispatch(actionCreators.getList());    
+            }
+            
+            dispatch(actionCreators.searchFocus());
+        },
+        searchBlur(){
+            dispatch(actionCreators.searchBlur());  
+        },
+        onMouseEnterHot(){
+            dispatch(actionCreators.onMouseEnterHot())
+        },
+        onMouseLeaveHot(){
+            dispatch(actionCreators.onMouseLeaveHot())
+        },
+        changePage(page, totalPage, spinIcon){
+            if (spinIcon.style.transform === 'rotate(360deg)'){
+                spinIcon.style.transform = 'rotate(0deg)'
+            } else {
+                spinIcon.style.transform = 'rotate(360deg)'
+            }
+            
+            if (page === totalPage){
+                page = 1;
+                dispatch(actionCreators.changePage(page))
+            } else {
+                dispatch(actionCreators.changePage(page))
+            }
+        },
     }
 }
 

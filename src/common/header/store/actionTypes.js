@@ -1,3 +1,9 @@
-export const SEARCH_FOCUS_OR_BLUR = 'header/search_focus_or_blur';
-
+export const SEARCH_FOCUS = 'header/search_focus';
+export const SEARCH_BLUR = 'header/search_blur';
 export const GET_LIST = 'header/list';
+
+export const ON_MOUSE_ENTER_HOT = 'header/on_mouse_enter_hot';
+// leave
+export const ON_MOUSE_LEAVE_HOT = 'header/on_mouse_leave_hot';
+
+export const CHANGE_PAGE = 'header/change_page';

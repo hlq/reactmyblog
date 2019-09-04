@@ -1,15 +1,35 @@
+// 将 actionTypes.js 的所有export的东西引用,呈现出 对象式的引用
 import * as actionTypes from './actionTypes'
-
 import {fromJS} from 'immutable';
 
 const defaultState = fromJS({
-    inputBlur: true
+    inputFocus: false,
+    mouseInHot: false,
+    list:[],
+    page:1,
+    totalPage:1,
 });
 
 export default (state = defaultState, action) => {
-    if (action.type === actionTypes.SEARCH_FOCUS_OR_BLUR){
-        return state.set('inputBlur', !state.get('inputBlur'));
+    switch (action.type) {
+        case actionTypes.SEARCH_FOCUS:
+            return state.set('inputFocus', true);
+        case actionTypes.SEARCH_BLUR:
+            return state.set('inputFocus', false);
+        case actionTypes.ON_MOUSE_ENTER_HOT:
+            return state.set('mouseInHot', true);
+        case actionTypes.ON_MOUSE_LEAVE_HOT:
+            return state.set('mouseInHot', false);
+        case actionTypes.GET_LIST:
+            // return state.set('list', action.data);
+            return state.merge({
+                list: action.data,
+                totalPage: action.totalPage
+            });
+        case actionTypes.CHANGE_PAGE:
+            return state.set('page', action.page + 1);
+            
+        default:
+            return state;
     }
-    
-    return state;
 }
