@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {Provider} from 'react-redux';
 import Header from './common/header';
 import store from './store';
-
 import {BrowserRouter, Route} from 'react-router-dom';
+import Home from './pages/home';
+import Detail from './pages/detail';
 
 class App extends Component{
     render(){
@@ -12,8 +13,8 @@ class App extends Component{
                 <Header/>
                 <BrowserRouter>
                     {/*exact 精确？ */}
-                    <Route path="/" exact render={() => <div>HOME</div>} ></Route>
-                    <Route path="/detail" exact render={() => <div>DETAIL</div>} ></Route>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/detail" exact component={Detail} />
                 </BrowserRouter>
             </Provider>
         );
